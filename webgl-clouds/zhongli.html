@@ -1,0 +1,236 @@
+<!--<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+//		注册一个deviceorientation事件的接收器：
+
+window.addEventListener("deviceorientation", function(event) {
+// 处理event.alpha、event.beta及event.gamma
+}, true);
+//将设备放置在水平表面，屏幕顶端指向西方，则其方向信息如下：
+
+{alpha: 90,
+beta: 0,
+gamma: 0};
+//为了获得罗盘指向，可以简单的使用360度减去alpha。若设被平行于水平表面，其罗盘指向为(360 - alpha)。 若用户手持设备，屏幕处于一个垂直平面且屏幕顶端指向上方。beta的值为90，alpha和gamma无关。 用户手持设备，面向alpha角度，屏幕处于一个垂直屏幕，屏幕顶端指向右方，则其方向信息如下：
+
+{alpha: 270 - alpha,
+beta: 0,
+gamma: 90};
+//只用自定义界面通知用户校准罗盘：
+
+window.addEventListener("compassneedscalibration", function(event) {
+alert('您的罗盘需要校准，请将设备沿数字8方向移动。');
+event.preventDefault();
+}, true);
+//注册一个devicemotion时间的接收器：
+
+window.addEventListener("devicemotion", function(event) {
+// 处理event.acceleration、event.accelerationIncludingGravity、
+// event.rotationRate和event.interval
+}, true);
+//将设备放置在水平表面，屏幕向上，acceleration为零，则其accelerationIncludingGravity信息如下：
+
+{x: 0,
+y: 0,
+z: 9.81};
+//设备做自由落体，屏幕水平向上，accelerationIncludingGravity为零，则其acceleration信息如下：
+
+{x: 0,
+y: 0,
+z: -9.81};
+//将设备安置于车辆至上，屏幕处于一个垂直平面，顶端向上，面向车辆后部。车辆行驶速度为v，向右侧进行半径为r的转弯。设备记录acceleration和accelerationIncludingGravity在位置x处的情况，同时设备还会记录rotationRate.gamma的负值：
+
+{acceleration: {x: v^2/r, y: 0, z: 0},
+accelerationIncludingGravity: {x: v^2/r, y: 0, z: 9.81},
+rotationRate: {alpha: 0, beta: 0, gamma: -v/r*180/pi} }; 应用案例 if (window.DeviceMotionEvent) { 
+window.addEventListener('devicemotion',deviceMotionHandler, false); 
+} 
+var speed = 30;//speed
+var x = y = z = lastX = lastY = lastZ = 0;
+function deviceMotionHandler(eventData) { 
+var acceleration =eventData.accelerationIncludingGravity;
+x = acceleration.x;
+y = acceleration.y;
+z = acceleration.z;
+if(Math.abs(x-lastX) > speed || Math.abs(y-lastY) > speed || Math.abs(z-lastZ) > speed) {
+//简单的摇一摇触发代码
+alert(1);
+}
+lastX = x;
+lastY = y;
+lastZ = z;
+}
+	</script>
+</html>-->
+<!DOCTYPE HTML>  
+<html>  
+<head>  
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>HTML5移动端touch滑动与重力/方向感应结合</title>  
+<style type="text/css">  
+*{ margin:0; padding:0;}  
+html , body{ display:block; width:100%; max-width:640px; min-width:320px; margin:0 auto; height:100%;}  
+  
+.box{ width:100%; height:100%; overflow:hidden; -webkit-overflow-scrolling:touch;}  
+  
+.box_box{ width:300%; position:relative;}  
+.box_box img{ width:100%;}  
+.box_msg1 , .box_msg2 , .box_msg3 , .box_msg4 , .box_msg5 , .box_msg6{ display:block; width:60px; height:60px; line-height:60px; text-align:center; font-size:10px; border-radius:50%; position:absolute; left:350px; top:550px; background-color:#d00; color:#fff; cursor:pointer;  
+         -webkit-animation:box_msg 2s .2s infinite; animation:box_msg 2s .2s infinite;  
+}  
+.box_msg2{ left:900px; top:900px;}  
+.box_msg3{ left:600px; top:800px;}  
+.box_msg4{ left:500px; top:1000px;}  
+.box_msg5{ left:700px; top:1100px;}  
+.box_msg6{ left:800px; top:1200px;}  
+@-webkit-keyframes box_msg{  
+    0% , 100%{ -webkit-transform:scale(1); opacity:1;}  
+    50%{ -webkit-transform:scale(0.9); opacity:.8;}  
+}  
+@keyframes box_msg{  
+    0% , 100%{ transform:scale(1); opacity:1;}  
+    50%{ transform:scale(0.9); opacity:.8;}  
+}  
+</style>  
+<script src="jquery-1.11.3.js"></script>  
+<script src="shake.js"></script>  
+</head>  
+  
+<body>  
+<div class="box">  
+    <div class="box_box">  
+        <img src="cloud10.png" width="100%"/>  
+        <div class="box_msg1" data-text="再接再厉">点我有惊喜~</div>  
+        <div class="box_msg2" data-text="恭喜你，获得XXXX">点我有惊喜~</div>  
+        <div class="box_msg3" data-text="再接再厉">点我有惊喜~</div>  
+        <div class="box_msg4" data-text="再接再厉">点我有惊喜~</div>  
+        <div class="box_msg5" data-text="再接再厉">点我有惊喜~</div>  
+        <div class="box_msg6" data-text="再接再厉">点我有惊喜~</div>  
+    </div>  
+</div>  
+  
+  
+</body>  
+</html>  
+<script>  
+window.onload = function() {  
+    var demo = $('.box_box');  
+    var demoW = demo.width();  
+    var demoH = demo.height();  
+    var winW = $(window).width();  
+    var winH = $(window).height();  
+    var spacing_l = demoW - winW;  
+    var spacing_t = demoH - winH;  
+    var x_bl;  
+    var y_bl;  
+    //手机感应动作  
+    var myShakeEvent = new Shake({  
+        threshold:0.3,  
+         timeout:0  
+    });  
+    myShakeEvent.start();  
+    window.addEventListener('shake', shakeEventDidOccur, false);  
+    function shakeEventDidOccur () {  
+        deal_with(myShakeEvent.lastX , myShakeEvent.lastY , false);  
+    }  
+      
+    //滑动动作  
+    document.body.addEventListener("touchstart", touchStart, false);  
+    document.body.addEventListener("touchmove", touchMove, false);  
+    document.body.addEventListener("touchend", touchEnd, false);  
+    function touchStart(e){  
+        var touch = e.touches[0];  
+        startX = touch.pageX;  
+        startY = touch.pageY;  
+        window.removeEventListener('shake', shakeEventDidOccur, false);  
+    }  
+    function touchMove(e){  
+        e.preventDefault();  
+        var touch = e.touches[0];  
+        endX = touch.pageX;  
+        endY = touch.pageY;  
+        deal_with(startX - endX , endY - startY , true);  
+    }  
+    function touchEnd(e){  
+        setTimeout(function(){  
+            window.addEventListener('shake', shakeEventDidOccur, false);  
+        },500)  
+    }  
+      
+    //到达指定位置  
+    function deal_with(left_num , top_num , if_touch){  
+        if(if_touch){  
+            x_bl = 0.1;  
+            y_bl = 0.1;  
+        }else{  
+            x_bl = 5;  
+            y_bl = 5;  
+        }  
+//      var demo_l = parseFloat(demo.css("margin-left"));  
+//      var demo_t = parseFloat(demo.css("margin-top"));  
+        var demo_l = demo.offset().left;  
+        var demo_t = demo.offset().top;  
+          
+        if(demo_l <= 0 && demo_l >= -spacing_l){  
+            var l_num = Math.abs(left_num) * x_bl;  
+            if(left_num > 0){  
+                l_num = demo_l - l_num;  
+            }else{  
+                l_num = demo_l + l_num;  
+            }  
+            if(l_num > 0){  
+                l_num = 0;  
+            }  
+            if(l_num < -spacing_l){  
+                l_num = -spacing_l;  
+            }  
+            //demo.css({"margin-left":l_num});  
+            demo_translate3d();  
+        }  
+        if(demo_t <= 0 && demo_t >= -spacing_t){  
+            var t_num = Math.abs(top_num) * y_bl;  
+            //手机感应动作  只设置横向感应，手指动作，上下左右都能滑动  
+            if(!if_touch){  
+                t_num = demo_t;  
+            }else{  
+                if(top_num > 0){  
+                    t_num = demo_t + t_num;  
+                }else{  
+                    t_num = demo_t - t_num;  
+                }  
+                if(t_num > 0){  
+                    t_num = 0;  
+                }  
+                if(t_num < -spacing_t){  
+                    t_num = -spacing_t;  
+                }  
+            }  
+            //demo.css({"margin-top":t_num});  
+            demo_translate3d();  
+        }  
+        function demo_translate3d(){  
+            var trans = "translate3d(" + l_num + "px," + t_num + "px,0)";  
+            demo.css({  
+                "-webkit-transition":"0ms",  
+                "-webkit-transform":trans,  
+                "transition":"0ms",  
+                "transform":trans  
+            });  
+        }  
+    }  
+      
+      
+      
+};  
+  
+$(".box_msg1 , .box_msg2 , .box_msg3 , .box_msg4 , .box_msg5 , .box_msg6").click(function(){  
+    alert($(this).attr("data-text"));  
+});  
+</script>  
